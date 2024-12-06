@@ -9,7 +9,6 @@ import { UsernamePipe } from './pipes/usernamePipe.pipe';
 import { TimeAgoPipe } from './pipes/time-ago.pipe';
 import { HighlightDirective } from './directives/highlight.directive';
 
-
 @NgModule({
   declarations: [
     ShortenPipe,
@@ -26,7 +25,7 @@ import { HighlightDirective } from './directives/highlight.directive';
     ShortenPipe,
     UsernamePipe,
     TimeAgoPipe,
-    HighlightDirective
+    HighlightDirective,
   ]
 })
 export class SharedModule { }
