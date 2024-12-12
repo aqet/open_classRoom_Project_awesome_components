@@ -10,6 +10,8 @@ import { map, Observable, startWith, tap } from 'rxjs';
 import { ComplexFormService } from '../../services/complex-form.service';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { HttpClientModule } from '@angular/common/http';
+import { validValidator } from '../../validators/valid.validator';
+import { confirmEqualValidator } from '../../validators/confirm-equal.validator';
 
 @Component({
   selector: 'app-complex-form',
@@ -50,6 +52,8 @@ export class ComplexFormComponent implements OnInit {
   loginInfoForm!: FormGroup;
   showEmailCtrl$!: Observable<boolean>;
   showPhoneCtrl$!: Observable<boolean>;
+  showEmailError$!: Observable<boolean>
+  showPasswordError$!: Observable<boolean>
 
   constructor(private formBuilder: FormBuilder,
               private complexFormService: ComplexFormService) { }
@@ -90,6 +94,9 @@ export class ComplexFormComponent implements OnInit {
     this.emailForm = this.formBuilder.group({
         email: this.emailCtrl,
         confirm: this.confirmEmailCtrl
+    },{
+      validators:[confirmEqualValidator('email', 'confirm')],
+      updateOn: 'blur'
     });
     this.phoneCtrl = this.formBuilder.control('');
     this.passwordCtrl = this.formBuilder.control('', Validators.required);
@@ -98,6 +105,9 @@ export class ComplexFormComponent implements OnInit {
         username: ['', Validators.required],
         password: this.passwordCtrl,
         confirmPassword: this.confirmPasswordCtrl
+    },{
+      validators: [confirmEqualValidator('password', 'confirmPassword')],
+      updateOn: 'blur'
     });
   }
   
@@ -121,6 +131,19 @@ export class ComplexFormComponent implements OnInit {
         startWith(this.contactPreferenceCtrl.value),
         map(preference => preference === 'phone'),
         tap(showPhoneCtrl => this.setPhoneValidators(showPhoneCtrl))
+    );
+    this.showEmailError$ = this.emailForm.statusChanges.pipe(
+      map(status => status === 'INVALID' &&
+                    this.emailCtrl.value &&
+                    this.confirmEmailCtrl.value
+      )
+    );
+    this.showPasswordError$ = this.loginInfoForm.statusChanges.pipe(
+      map(status => status === 'INVALID' &&
+                    this.passwordCtrl.value &&
+                    this.confirmPasswordCtrl.value &&
+                    this.loginInfoForm.hasError('confirmEqual')
+      )
     );
   }
 
@@ -164,9 +187,7 @@ export class ComplexFormComponent implements OnInit {
         return 'Ce numéro de téléphone ne contient pas assez de chiffres';
     } else if (ctrl.hasError('maxlength')) {
         return 'Ce numéro de téléphone contient trop de chiffres';
-    } else if (ctrl.hasError('validValidator')) {
-      return 'Ce texte ne contient pas le mot VALID';
-  }else {
+    } else {
         return 'Ce champ contient une erreur';
     }
   }
