@@ -1,0 +1,28 @@
+mat-nav-list{
+    display: grid;
+    gap: 15px;
+
+
+    a{
+        color: black;
+        display: flex;
+        gap: 20px;
+        &:hover{
+            text-decoration: none;
+            background: #f0ecec;
+        }
+
+        img{
+            height: 40px;
+            border-radius: 100%;
+        }
+
+        div{
+            h3, p{
+                margin: 0;
+            }
+        }
+
+    
+    }
+}

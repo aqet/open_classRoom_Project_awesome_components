@@ -8,6 +8,7 @@ import { ShortenPipe } from './pipes/shorten.pipe';
 import { UsernamePipe } from './pipes/usernamePipe.pipe';
 import { TimeAgoPipe } from './pipes/time-ago.pipe';
 import { HighlightDirective } from './directives/highlight.directive';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
